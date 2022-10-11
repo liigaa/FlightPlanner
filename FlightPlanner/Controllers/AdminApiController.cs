@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using FlightPlanner.Validation;
+using AutoMapper;
+using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
+using FlightPlanner.Core.Validation;
 using Microsoft.AspNetCore.Cors;
 
 namespace FlightPlanner.Controllers
@@ -11,22 +14,27 @@ namespace FlightPlanner.Controllers
     [ApiController, Authorize, EnableCors("MyPolicy")]
     public class AdminApiController : ControllerBase
     {
-        public readonly FlightPlannerDbContext _context;
-        private static readonly object lockName = new();
+        private readonly IFlightService _flightService;
+        private readonly IEnumerable<IFlightValidator> _flightValidators;
+        private readonly IEnumerable<IAirportValidator> _airportValidators;
+        private readonly IMapper _mapper;
 
-        public AdminApiController(FlightPlannerDbContext context)
+        public AdminApiController(IFlightService flightService,
+            IEnumerable<IFlightValidator> flightValidators,
+            IEnumerable<IAirportValidator> airportValidators,
+            IMapper mapper)
         {
-            _context = context;
+            _flightService = flightService;
+            _flightValidators = flightValidators;
+            _airportValidators = airportValidators;
+            _mapper = mapper;
         }
 
         [Route("flights/{id}")]
         [HttpGet]
         public IActionResult GetFlight(int id)
         {
-            var flight = _context.Flights
-                .Include(f => f.From)
-                .Include(f => f.To)
-                .FirstOrDefault(f => f.Id == id);
+            var flight = _flightService.GetCompleteFlightById(id);
 
             if (flight == null)
             {
@@ -38,44 +46,38 @@ namespace FlightPlanner.Controllers
 
         [Route("flights")]
         [HttpPut]
-        public IActionResult PutFlight(Flight flight)
+        public IActionResult PutFlight(FlightRequest request)
         {
-            lock (lockName)
+            var flight = _mapper.Map<Flight>(request);
+
+            if (!_flightValidators.All(f => f.IsValid(flight)) ||
+                !_airportValidators.All(f => f.IsValid(flight?.From)) ||
+                !_airportValidators.All(f => f.IsValid(flight?.To)))
             {
-                if (Validator.IsValueEmptyOrNull(flight) ||
-                    Validator.IsSameAirport(flight) ||
-                    Validator.IsCorrectDateFormat(flight))
-                {
-                    return BadRequest();
-                }
-
-                var flightsList = _context.Flights
-                    .Include(f => f.From)
-                    .Include(f => f.To)
-                    .ToList();
-
-                if (Validator.IsSameFlight(flight, flightsList))
-                {
-                    return Conflict();
-                }
-
-                _context.Flights.Add(flight);
-                _context.SaveChanges();
-
-                return Created("", flight);
+                return BadRequest();
             }
+
+            if (_flightService.Exists(flight))
+            {
+                return Conflict();
+            }
+
+            _flightService.Create(flight);
+
+            request = _mapper.Map<FlightRequest>(flight);
+
+            return Created("", request);
         }
 
         [Route("flights/{id}")]
         [HttpDelete]
         public IActionResult DeleteFlight(int id)
         {
-            var flight = _context.Flights.FirstOrDefault(f => f.Id == id);
+            var flight = _flightService.GetById(id);
 
             if(flight != null)
             {
-                _context.Flights.Remove(flight);
-                _context.SaveChanges();
+                _flightService.Delete(flight);
             }
 
             return Ok();

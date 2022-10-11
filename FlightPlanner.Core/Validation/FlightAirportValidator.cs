@@ -1,16 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FlightPlanner.Core.Models;
 
 namespace FlightPlanner.Core.Validation
 {
-    internal class FlightAirportValidator : IFlightValidator
+    public class FlightAirportValidator : IFlightValidator
     {
-        public bool isValid(Flight flight)
+        public bool IsValid(Flight flight)
         {
-            throw new NotImplementedException();
+            if (flight?.From != null && flight?.To != null)
+            {
+                return flight.From.AirportCode?.Trim().ToLower()!= 
+                       flight.To.AirportCode?.Trim().ToLower();
+            }
+
+            return false;
         }
     }
 }

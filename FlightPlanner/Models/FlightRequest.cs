@@ -1,6 +1,8 @@
-﻿namespace FlightPlanner
+﻿using FlightPlanner.Core.Models;
+
+namespace FlightPlanner.Models
 {
-    public class Flight
+    public class FlightRequest
     {
         public int Id { get; set; }
         public Airport From { get; set; }

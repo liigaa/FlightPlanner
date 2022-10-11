@@ -1,16 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FlightPlanner.Core.Models;
 
 namespace FlightPlanner.Core.Validation
 {
     public class FlightTimeValidator : IFlightValidator
     {
-        public bool isValid(Flight flight)
+        public bool IsValid(Flight flight)
         {
-            throw new NotImplementedException();
+            if (!string.IsNullOrEmpty(flight?.ArrivalTime) && 
+                !string.IsNullOrEmpty(flight?.DepartureTime))
+            {
+                var arrival = DateTime.Parse(flight.ArrivalTime);
+                var departure = DateTime.Parse(flight.DepartureTime);
+
+                return arrival < departure;
+            }
+
+            return false;
         }
     }
 }
