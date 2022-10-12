@@ -47,6 +47,7 @@ namespace FlightPlanner
 
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthorizationHandler>("BasicAuthentication", null);
+
             services.AddDbContext<FlightPlannerDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("flight-planner"));

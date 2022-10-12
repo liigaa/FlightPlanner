@@ -6,6 +6,7 @@ using AutoMapper;
 using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
 using FlightPlanner.Core.Validation;
+using FlightPlanner.Models;
 using Microsoft.AspNetCore.Cors;
 
 namespace FlightPlanner.Controllers
@@ -39,9 +40,11 @@ namespace FlightPlanner.Controllers
             if (flight == null)
             {
                 return NotFound();
-            } 
+            }
 
-            return Ok(flight);
+            var response = _mapper.Map<FlightRequest>(flight);
+
+            return Ok(response);
         }
 
         [Route("flights")]

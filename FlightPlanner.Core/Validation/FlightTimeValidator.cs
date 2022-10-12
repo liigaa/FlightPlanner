@@ -13,7 +13,7 @@ namespace FlightPlanner.Core.Validation
                 var arrival = DateTime.Parse(flight.ArrivalTime);
                 var departure = DateTime.Parse(flight.DepartureTime);
 
-                return arrival < departure;
+                return arrival > departure;
             }
 
             return false;

@@ -1,5 +1,4 @@
-﻿using System;
-using FlightPlanner.Core.Models;
+﻿using FlightPlanner.Core.Models;
 
 namespace FlightPlanner.Core.Validation
 {
