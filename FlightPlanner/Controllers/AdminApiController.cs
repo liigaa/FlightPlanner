@@ -19,6 +19,7 @@ namespace FlightPlanner.Controllers
         private readonly IEnumerable<IFlightValidator> _flightValidators;
         private readonly IEnumerable<IAirportValidator> _airportValidators;
         private readonly IMapper _mapper;
+        private static readonly object lockName = new();
 
         public AdminApiController(IFlightService flightService,
             IEnumerable<IFlightValidator> flightValidators,
@@ -51,37 +52,35 @@ namespace FlightPlanner.Controllers
         [HttpPut]
         public IActionResult PutFlight(FlightRequest request)
         {
-            var flight = _mapper.Map<Flight>(request);
+            lock (lockName)
+            {
+                var flight = _mapper.Map<Flight>(request);
 
-            if (!_flightValidators.All(f => f.IsValid(flight)) ||
+                if (!_flightValidators.All(f => f.IsValid(flight)) ||
                 !_airportValidators.All(f => f.IsValid(flight?.From)) ||
                 !_airportValidators.All(f => f.IsValid(flight?.To)))
-            {
-                return BadRequest();
+                {
+                    return BadRequest();
+                }
+
+                if (_flightService.Exists(flight))
+                {
+                    return Conflict();
+                }
+
+                _flightService.Create(flight);
+
+                request = _mapper.Map<FlightRequest>(flight);
+
+                return Created("", request);
             }
-
-            if (_flightService.Exists(flight))
-            {
-                return Conflict();
-            }
-
-            _flightService.Create(flight);
-
-            request = _mapper.Map<FlightRequest>(flight);
-
-            return Created("", request);
         }
 
         [Route("flights/{id}")]
         [HttpDelete]
         public IActionResult DeleteFlight(int id)
         {
-            var flight = _flightService.GetById(id);
-
-            if(flight != null)
-            {
-                _flightService.Delete(flight);
-            }
+            _flightService.DeleteById(id);
 
             return Ok();
         }

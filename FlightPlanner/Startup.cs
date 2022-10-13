@@ -64,6 +64,9 @@ namespace FlightPlanner
             services.AddScoped<IAirportValidator, AirportCityValidator>();
             services.AddScoped<IAirportValidator, AirportCodeValidator>();
             services.AddScoped<IAirportValidator, AirportCountryValidator>();
+            services.AddScoped<IRequestValidator, FromRequestValidator>();
+            services.AddScoped<IRequestValidator, ToRequestValidator>();
+            services.AddScoped<IRequestValidator, DateRequestValidator>();
             services.AddSingleton<IMapper>(AutoMapperConfig.CreateMapper());
         }
 
