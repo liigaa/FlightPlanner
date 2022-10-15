@@ -12,6 +12,7 @@ namespace FlightPlanner.Data
 
         public DbSet<Flight> Flights { get; set; }
         public DbSet<Airport> Airports { get; set; }
+        public DbSet<User> Users { get; set; }
         public Task<int> SaveChangesAsync()
         {
             return base.SaveChangesAsync();
