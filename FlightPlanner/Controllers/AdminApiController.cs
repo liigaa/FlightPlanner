@@ -68,11 +68,16 @@ namespace FlightPlanner.Controllers
                     return Conflict();
                 }
 
-                _flightService.Create(flight);
+                var result = _flightService.Create(flight);
 
-                request = _mapper.Map<FlightRequest>(flight);
+                if (result.Success)
+                {
+                    request = _mapper.Map<FlightRequest>(flight);
 
-                return Created("", request);
+                    return Created("", request);
+                }
+
+                return Problem(result.FormattedErrors);
             }
         }
 

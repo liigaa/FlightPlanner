@@ -30,10 +30,10 @@ namespace FlightPlanner.Controllers
         [HttpGet]
         public IActionResult GetAirports(string search)
         {
-            var airports = _flightService.GetAirports(search).Select(airport => _mapper.Map<AirportRequest>(airport));
-            //var newAirports = airports.Select(airport => _mapper.Map<AirportRequest>(airport));
+            var airports = _flightService.GetAirports(search);
+            var newAirports = airports.Select(airport => _mapper.Map<AirportRequest>(airport));
 
-            return Ok(airports);
+            return Ok(newAirports);
         }
 
         [Route("flights/search")]
