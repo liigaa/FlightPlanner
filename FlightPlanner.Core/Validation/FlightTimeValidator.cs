@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using FlightPlanner.Core.Models;
 
 namespace FlightPlanner.Core.Validation
@@ -10,10 +11,18 @@ namespace FlightPlanner.Core.Validation
             if (!string.IsNullOrEmpty(flight?.ArrivalTime) && 
                 !string.IsNullOrEmpty(flight?.DepartureTime))
             {
-                var arrival = DateTime.Parse(flight.ArrivalTime);
-                var departure = DateTime.Parse(flight.DepartureTime);
+                try
+                {
+                    var arrival = DateTime.Parse(flight.ArrivalTime);
+                    var departure = DateTime.Parse(flight.DepartureTime);
 
-                return arrival > departure;
+                    return arrival > departure;
+                }
+                catch
+                {
+                    return false;
+                }
+                
             }
 
             return false;

@@ -13,7 +13,7 @@ namespace FlightPlanner.Tests
         private readonly IAirportValidator _airportCountryValidator = new AirportCountryValidator();
 
         [TestMethod]
-        public void AirportCity_ShouldNotBeEmpty_ResultTrue()
+        public void AirportCity_IsNotEmptyOrNull_ResultTrue()
         {
             // Arrange
             var airport = new Airport
@@ -29,12 +29,14 @@ namespace FlightPlanner.Tests
         }
 
         [TestMethod]
-        public void AirportCity_ShouldNotBeEmpty_ResultFalse()
+        [DataRow(null)]
+        [DataRow("")]
+        public void AirportCity_IsEmptyOrNull_ResultFalse(string city)
         {
             // Arrange
             var airport = new Airport
             {
-                City = ""
+                City = city
             };
 
             // Act
@@ -45,7 +47,7 @@ namespace FlightPlanner.Tests
         }
 
         [TestMethod]
-        public void AirportCode_ShouldNotBeEmpty_ResultTrue()
+        public void AirportCode_IsNotEmptyOrNull_ResultTrue()
         {
             // Arrange
             var airport = new Airport
@@ -61,12 +63,14 @@ namespace FlightPlanner.Tests
         }
 
         [TestMethod]
-        public void AirportCode_ShouldNotBeEmpty_ResultFalse()
+        [DataRow(null)]
+        [DataRow("")]
+        public void AirportCode_IsEmptyOrNull_ResultFalse(string code)
         {
             // Arrange
             var airport = new Airport
             {
-                AirportCode = ""
+                AirportCode = code
             };
 
             // Act
@@ -77,7 +81,7 @@ namespace FlightPlanner.Tests
         }
 
         [TestMethod]
-        public void AirportCountry_ShouldNotBeEmpty_ResultTrue()
+        public void AirportCountry_IsNotEmptyOrNull_ResultTrue()
         {
             // Arrange
             var airport = new Airport
@@ -93,12 +97,14 @@ namespace FlightPlanner.Tests
         }
 
         [TestMethod]
-        public void AirportCountry_ShouldNotBeEmpty_ResultFalse()
+        [DataRow(null)]
+        [DataRow("")]
+        public void AirportCountry_IsEmptyOrNull_ResultFalse(string country)
         {
             // Arrange
             var airport = new Airport
             {
-                Country = ""
+                Country = country
             };
 
             // Act

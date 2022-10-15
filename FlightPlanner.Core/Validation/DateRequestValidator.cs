@@ -1,4 +1,5 @@
-﻿using FlightPlanner.Core.Models;
+﻿using System;
+using FlightPlanner.Core.Models;
 
 namespace FlightPlanner.Core.Validation
 {
@@ -6,7 +7,19 @@ namespace FlightPlanner.Core.Validation
     {
         public bool IsValid(Request request)
         {
-            return !string.IsNullOrEmpty(request?.DepartureDate);
+            if (!string.IsNullOrEmpty(request?.DepartureDate))
+            {
+                try
+                {
+                    DateTime.Parse(request.DepartureDate);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }
