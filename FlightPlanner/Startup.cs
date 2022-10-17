@@ -58,6 +58,7 @@ namespace FlightPlanner
             services.AddScoped<IEntityService<Flight>, EntityService<Flight>>();
             services.AddScoped<IEntityService<User>, EntityService<User>>();
             services.AddScoped<IFlightService, FlightService>();
+            services.AddScoped<IAirportService, AirportService>();
             services.AddScoped<IFlightValidator, CarrierValidator>();
             services.AddScoped<IFlightValidator, FlightAirportValidator>();
             services.AddScoped<IFlightValidator, FlightTimeValidator>();

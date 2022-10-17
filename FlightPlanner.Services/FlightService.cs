@@ -39,49 +39,13 @@ namespace FlightPlanner.Services
                 Delete(flight);
             }
         }
-
-        public List<Flight> GetAllFlights()
-        {
-            return _context.Flights
-                .Include(f => f.From)
-                .Include(f => f.To).ToList();
-        }
-
-        public List<Airport> GetAirports(string phrase)
-        {
-            var airports = new List<Airport>();
-            var flights = GetAllFlights();
-            var lowPhrase = phrase.ToLower().Trim();
-
-            foreach (var flight in flights)
-            {
-                if (flight.From.AirportCode.ToLower().Contains(lowPhrase) ||
-                    flight.From.City.ToLower().Contains(lowPhrase) ||
-                    flight.From.Country.ToLower().Contains(lowPhrase))
-                {
-                    airports.Add(flight.From);
-                }
-
-                if (flight.To.AirportCode.ToLower().Contains(lowPhrase) ||
-                    flight.To.City.ToLower().Contains(lowPhrase) ||
-                    flight.To.Country.ToLower().Contains(lowPhrase))
-                {
-                    airports.Add(flight.To);
-                }
-            }
-
-            return airports;
-        }
-
+        
         public List<Flight> GetFlights(Request request)
         {
-            var flights = GetAllFlights();
-
-            return flights.Where(f =>
+            return _context.Flights.Where(f =>
                 f.From.AirportCode == request.From &&
                 f.To.AirportCode == request.To &&
-                f.DepartureTime[..10] == request.DepartureDate).ToList();
-
+                f.DepartureTime.Substring(0, 10) == request.DepartureDate.Substring(0, 10)).ToList();
         }
     }
 }

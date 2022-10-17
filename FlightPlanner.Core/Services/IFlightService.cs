@@ -8,8 +8,6 @@ namespace FlightPlanner.Core.Services
         Flight GetCompleteFlightById(int id);
         bool Exists(Flight flight);
         void DeleteById(int id);
-        List<Flight> GetAllFlights();
-        List<Airport> GetAirports(string phrase);
         List<Flight> GetFlights(Request request);
     }
 }
