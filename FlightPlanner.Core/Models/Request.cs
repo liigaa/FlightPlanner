@@ -1,6 +1,6 @@
-﻿namespace FlightPlanner
+﻿namespace FlightPlanner.Core.Models
 {
-    public class FlightRequest
+    public class Request
     {
         public string From { get; set; }
         public string To { get; set; }
