@@ -1,4 +1,4 @@
-﻿using FlightPlanner.Data;
+﻿using FlightPlanner.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers
@@ -7,20 +7,18 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class TestingApiController : ControllerBase
     {
-        private readonly IFlightPlannerDbContext _context;
+        private readonly IDeleteAllRecordsService _service;
 
-        public TestingApiController(IFlightPlannerDbContext context)
+        public TestingApiController(IDeleteAllRecordsService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpPost]
         [Route("clear")]
         public IActionResult Clear()
         {
-            _context.Flights.RemoveRange(_context.Flights);
-            _context.Airports.RemoveRange(_context.Airports);
-            _context.SaveChanges();
+            _service.DeleteAllRecords();
 
             return Ok();
         }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using FlightPlanner.Core.Interfaces;
-using FlightPlanner.Core.Models;
 
 namespace FlightPlanner.Core.Services
 {

@@ -68,6 +68,7 @@ namespace FlightPlanner
             services.AddScoped<IRequestValidator, FromRequestValidator>();
             services.AddScoped<IRequestValidator, ToRequestValidator>();
             services.AddScoped<IRequestValidator, DateRequestValidator>();
+            services.AddScoped<IDeleteAllRecordsService, DeleteAllRecordsService>();
             services.AddSingleton<IMapper>(AutoMapperConfig.CreateMapper());
         }
 
